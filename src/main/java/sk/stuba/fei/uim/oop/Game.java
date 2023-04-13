@@ -36,10 +36,10 @@ public class Game {
         buttonRestart.setFocusable(false);
 
         JPanel topMenu = new JPanel();
-        topMenu.setBackground(Color.LIGHT_GRAY);
         topMenu.setLayout(new GridLayout(2, 2));
         topMenu.add(buttonRestart);
         topMenu.add(buttonCheckWin);
+        topMenu.add(gameLogic.getLabel());
         topMenu.add(slider);
 
         frame.add(topMenu, BorderLayout.PAGE_START);

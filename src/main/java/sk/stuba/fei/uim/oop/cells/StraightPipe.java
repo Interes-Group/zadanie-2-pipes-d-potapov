@@ -12,13 +12,13 @@ public class StraightPipe extends Cell{
     private BufferedImage pic;
     private JLabel picLabel;
     public StraightPipe() {
-//        try {
-//            pic = ImageIO.read(Objects.requireNonNull(StraightPipe.class.getResourceAsStream("/straightPipe.png")));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        picLabel = new JLabel(new ImageIcon(pic));
-//        add(picLabel);
+        try {
+            pic = ImageIO.read(Objects.requireNonNull(StraightPipe.class.getResourceAsStream("/straightPipe.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        picLabel = new JLabel(new ImageIcon(pic));
+        add(picLabel);
     }
 
     public void rotate(){
