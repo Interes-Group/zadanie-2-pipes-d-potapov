@@ -3,8 +3,6 @@ package sk.stuba.fei.uim.oop;
 import sk.stuba.fei.uim.oop.controls.GameLogic;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 public class Game {
@@ -17,8 +15,10 @@ public class Game {
         frame.setFocusable(true);
         frame.requestFocusInWindow();
 
-        GameLogic gameLogic = new GameLogic(frame);
+        JLabel label = new JLabel();
+        GameLogic gameLogic = new GameLogic(frame, label);
         frame.addKeyListener(gameLogic);
+
 
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 8, 12, 8);
         slider.setMinorTickSpacing(2);
@@ -29,20 +29,21 @@ public class Game {
         slider.addChangeListener(gameLogic);
 
         JButton buttonRestart = new JButton("RESTART");
-        buttonRestart.addActionListener(gameLogic);
+        buttonRestart.addActionListener(e -> gameLogic.gameRestart());
         buttonRestart.setFocusable(false);
 
         JButton buttonCheckWin = new JButton("CHECK WIN");
-        buttonRestart.setFocusable(false);
+        buttonCheckWin.addActionListener(e -> gameLogic.checkWin());
+        buttonCheckWin.setFocusable(false);
 
-        JPanel topMenu = new JPanel();
-        topMenu.setLayout(new GridLayout(2, 2));
-        topMenu.add(buttonRestart);
-        topMenu.add(buttonCheckWin);
-        topMenu.add(gameLogic.getLabel());
-        topMenu.add(slider);
+        JPanel menu = new JPanel();
+        menu.setLayout(new GridLayout(2, 2));
+        menu.add(label);
+        menu.add(slider);
+        menu.add(buttonRestart);
+        menu.add(buttonCheckWin);
 
-        frame.add(topMenu, BorderLayout.PAGE_START);
+        frame.add(menu, BorderLayout.PAGE_END);
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);

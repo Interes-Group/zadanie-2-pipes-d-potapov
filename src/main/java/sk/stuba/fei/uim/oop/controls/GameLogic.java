@@ -1,7 +1,7 @@
 package sk.stuba.fei.uim.oop.controls;
 
 import sk.stuba.fei.uim.oop.GameField;
-import sk.stuba.fei.uim.oop.cells.StraightPipe;
+import sk.stuba.fei.uim.oop.cells.Cell;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -13,79 +13,72 @@ import java.awt.event.MouseEvent;
 public class GameLogic extends UniversalAdapter {
     public static final int INITIAL_BOARD_SIZE = 6;
     private JFrame mainGame;
-    private GameField currentBoard;
     private JLabel label;
+    private GameField currentBoard;
     private int currentBoardSize;
 
-    public GameLogic(JFrame mainGame) {
+    public GameLogic(JFrame mainGame, JLabel label) {
         this.mainGame = mainGame;
+        this.label = label;
         currentBoardSize = INITIAL_BOARD_SIZE;
         initNewField(currentBoardSize);
         mainGame.add(currentBoard);
-        label = new JLabel();
-        updateNameLabel();
+        updateLabel();
     }
-    private void updateNameLabel() {
+
+        private void updateLabel() {
         label.setText("BABABABA CURRENT BOARD SIZE: " + currentBoardSize);
         mainGame.revalidate();
         mainGame.repaint();
     }
-
-    private void gameRestart() {
-        mainGame.remove(currentBoard);
-        initNewField(currentBoardSize);
-        mainGame.add(currentBoard);
-        updateNameLabel();
-    }
-
-    private void initNewField(int size){
+    private void initNewField(int size) {
         currentBoard = new GameField(size);
         currentBoard.addMouseMotionListener(this);
         currentBoard.addMouseListener(this);
     }
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        this.gameRestart();
-        this.mainGame.revalidate();
-        this.mainGame.repaint();
-        this.mainGame.setFocusable(true);
-        this.mainGame.requestFocus();
+
+    public void gameRestart() {
+        mainGame.remove(currentBoard);
+        initNewField(currentBoardSize);
+        mainGame.add(currentBoard);
+        updateLabel();
+        mainGame.revalidate();
+        mainGame.repaint();
+
+//        mainGame.setFocusable(true);
+//        mainGame.requestFocus();
+    }
+    public void checkWin(){
+
     }
     @Override
-    public void mouseClicked(MouseEvent e) {
-        Component current = currentBoard.getComponentAt(e.getX(), e.getY());
-        if (!(current instanceof StraightPipe)) {
-            return;
-        }
-        ((StraightPipe) current).rotate();
+    public void actionPerformed(ActionEvent e) {
+//        gameRestart();
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
         currentBoardSize = ((JSlider) e.getSource()).getValue();
-//        restartGame();
-//        gameFrame.setFocusable(true);
-//        gameFrame.requestFocus();
-
-        updateNameLabel();
         gameRestart();
-        mainGame.setFocusable(true);
-        mainGame.requestFocus();
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Component current = currentBoard.getComponentAt(e.getX(), e.getY());
+        if (!(current instanceof Cell)) {
+            return;
+        }
+        ((Cell) current).rotate();
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println(e);
         switch (e.getKeyCode()) {
             case KeyEvent.VK_R:
-                this.gameRestart();
+                gameRestart();
                 break;
             case KeyEvent.VK_ESCAPE:
-                this.mainGame.dispose();
+                mainGame.dispose();
         }
-    }
-
-    public JLabel getLabel() {
-        return label;
     }
 }
