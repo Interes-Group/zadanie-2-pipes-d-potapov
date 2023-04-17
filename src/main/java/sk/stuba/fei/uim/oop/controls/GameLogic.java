@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class GameLogic extends UniversalAdapter {
-    public static final int INITIAL_BOARD_SIZE = 8;
+    public static final int INITIAL_BOARD_SIZE = 3;
     private final JFrame mainGame;
     private final JLabel label;
     private GameField currentBoard;

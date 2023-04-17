@@ -1,31 +1,28 @@
 package sk.stuba.fei.uim.oop.cells;
 
-import java.awt.*;
+import sk.stuba.fei.uim.oop.Direction;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-public class ArchedPipe extends Cell{
-    private int ind;
+public class ArchedPipe extends Cell {
+    private final List<Direction> directions;
+
     public ArchedPipe(int x, int y) {
         super(x, y);
-        ind = 0;
+        Random random = new Random();
+        directions = new ArrayList<>();
+        Direction direction = Direction.values()[random.nextInt(Direction.values().length)];
+        directions.add(direction);
+        directions.add(directions.get(0).next());
+        setDirections(directions);
     }
 
     @Override
-    public void rotate(){
-        ind++;
-        ind%=4;
+    public void rotate() {
+        directions.add(directions.get(1).next());
+        directions.remove(0);
         repaint();
-    }
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        final int [][] linesParameters = {
-                {getWidth() / 2, 0, 10, getHeight() / 2 + 10},
-                {getWidth() / 2, getHeight() / 2, getHeight() / 2, 10},
-                {getWidth() / 2, getHeight() / 2, 10, getHeight() / 2},
-                {0, getHeight() / 2, getWidth() / 2, 10}
-        };
-        g.fillRect(linesParameters[ind][0],linesParameters[ind][1],linesParameters[ind][2],linesParameters[ind][3]);
-        g.fillRect(linesParameters[(ind+1)%4][0],linesParameters[(ind+1)%4][1],linesParameters[(ind+1)%4][2],linesParameters[(ind+1)%4][3]);
     }
 }

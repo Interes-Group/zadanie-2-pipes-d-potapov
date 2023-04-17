@@ -3,7 +3,7 @@ package sk.stuba.fei.uim.oop;
 import sk.stuba.fei.uim.oop.cells.ArchedPipe;
 import sk.stuba.fei.uim.oop.cells.Cell;
 import sk.stuba.fei.uim.oop.cells.StraightPipe;
-import sk.stuba.fei.uim.oop.cells.outermostPipe;
+import sk.stuba.fei.uim.oop.cells.OutermostPipe;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,8 +15,8 @@ public class GameField extends JPanel {
     private final Random random;
     private boolean finishWasFound = false;
     private Cell[][] path;
-    private outermostPipe startCell;
-    private outermostPipe finishCell;
+    private OutermostPipe startCell;
+    private OutermostPipe finishCell;
 
     public GameField(int fieldSize) {
         this.fieldSize = fieldSize;
@@ -39,10 +39,12 @@ public class GameField extends JPanel {
 
     private void generateStartAndFinish() {
         int yStart = random.nextInt(fieldSize);
-        int yFinish = random.nextInt(fieldSize);
-        startCell = new outermostPipe(0, yStart);
-        finishCell = new outermostPipe(fieldSize - 1, yFinish);
+        startCell = new OutermostPipe(0, yStart);
+        startCell.waterReached();
         path[0][yStart] = startCell;
+
+        int yFinish = random.nextInt(fieldSize);
+        finishCell = new OutermostPipe(fieldSize - 1, yFinish);
         path[fieldSize - 1][yFinish] = finishCell;
     }
 
