@@ -6,7 +6,8 @@ import java.awt.*;
 public class StraightPipe extends Cell {
     private int ind;
 
-    public StraightPipe() {
+    public StraightPipe(int x, int y) {
+        super(x, y);
         ind = 0;
     }
 

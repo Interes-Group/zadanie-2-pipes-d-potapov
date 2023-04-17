@@ -5,7 +5,8 @@ import java.awt.*;
 
 public class ArchedPipe extends Cell{
     private int ind;
-    public ArchedPipe() {
+    public ArchedPipe(int x, int y) {
+        super(x, y);
         ind = 0;
     }
 

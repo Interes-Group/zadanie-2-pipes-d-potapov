@@ -11,9 +11,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class GameLogic extends UniversalAdapter {
-    public static final int INITIAL_BOARD_SIZE = 6;
-    private JFrame mainGame;
-    private JLabel label;
+    public static final int INITIAL_BOARD_SIZE = 8;
+    private final JFrame mainGame;
+    private final JLabel label;
     private GameField currentBoard;
     private int currentBoardSize;
 
@@ -26,11 +26,12 @@ public class GameLogic extends UniversalAdapter {
         updateLabel();
     }
 
-        private void updateLabel() {
+    private void updateLabel() {
         label.setText("BABABABA CURRENT BOARD SIZE: " + currentBoardSize);
         mainGame.revalidate();
         mainGame.repaint();
     }
+
     private void initNewField(int size) {
         currentBoard = new GameField(size);
         currentBoard.addMouseMotionListener(this);
@@ -48,9 +49,11 @@ public class GameLogic extends UniversalAdapter {
 //        mainGame.setFocusable(true);
 //        mainGame.requestFocus();
     }
-    public void checkWin(){
 
+    public void checkWin() {
+        currentBoard.checkPathFromStart();
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
 //        gameRestart();
