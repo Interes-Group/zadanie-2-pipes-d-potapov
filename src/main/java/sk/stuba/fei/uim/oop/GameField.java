@@ -74,7 +74,8 @@ public class GameField extends JPanel {
         for (int[] neighbor : neighbors) {
             int rowNeighbor = neighbor[0];
             int columnNeighbor = neighbor[1];
-            if (rowNeighbor >= 0 && columnNeighbor >= 0 && rowNeighbor < fieldSize && columnNeighbor < fieldSize && path[rowNeighbor][columnNeighbor] == null) {
+            boolean isCoordinatesInField = rowNeighbor >= 0 && columnNeighbor >= 0 && rowNeighbor < fieldSize && columnNeighbor < fieldSize;
+            if (isCoordinatesInField && path[rowNeighbor][columnNeighbor] == null) {
                 randomizedDFS(coordinatesCurrent, neighbor);
                 if (finishWasFound) {
                     if (coordinatesPrevious != null) {
@@ -138,7 +139,7 @@ public class GameField extends JPanel {
 
         while (row >= 0 && column >= 0 && row < fieldSize && column < fieldSize && path[row][column].isConnectedToDirection(direction)) {
             path[row][column].setWaterReached(true);
-            if (path[row][column] == finishCell){
+            if (path[row][column] == finishCell) {
                 return true;
             }
             direction = path[row][column].getExitDirection(direction.next().next());
@@ -150,10 +151,10 @@ public class GameField extends JPanel {
         return false;
     }
 
-    public void setDefaultColorForPipes(){
-        for (Cell[] rowPath : path){
+    public void setDefaultColorForPipes() {
+        for (Cell[] rowPath : path) {
             for (Cell cell : rowPath) {
-                if (cell != startCell){
+                if (cell != startCell) {
                     cell.setWaterReached(false);
                 }
             }

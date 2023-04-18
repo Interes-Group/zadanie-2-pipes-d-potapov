@@ -1,5 +1,6 @@
 package sk.stuba.fei.uim.oop.cells;
 
+import lombok.Getter;
 import lombok.Setter;
 import sk.stuba.fei.uim.oop.Direction;
 
@@ -8,7 +9,10 @@ import java.awt.*;
 import java.util.List;
 
 public class Cell extends JPanel {
+    @Getter
     private final int[] coordinates;
+    @Getter
+    @Setter
     private List<Direction> directions;
     private boolean isWaterReached = false;
     @Setter
@@ -20,19 +24,7 @@ public class Cell extends JPanel {
         coordinates = new int[]{row, column};
     }
 
-    public int[] getCoordinates() {
-        return coordinates;
-    }
-
-    public List<Direction> getDirections() {
-        return directions;
-    }
-
-    protected void setDirections(List<Direction> directions) {
-        this.directions = directions;
-    }
-
-    public void setWaterReached(boolean bool){
+    public void setWaterReached(boolean bool) {
         isWaterReached = bool;
         repaint();
     }
@@ -40,10 +32,10 @@ public class Cell extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (highlight){
+        if (highlight) {
             g.setColor(Color.lightGray);
             ((Graphics2D) g).setStroke(new BasicStroke(6));
-            g.drawRect(0,0 , getWidth(), getHeight());
+            g.drawRect(0, 0, getWidth(), getHeight());
             g.setColor(Color.DARK_GRAY);
             highlight = false;
         }

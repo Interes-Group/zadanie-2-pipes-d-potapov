@@ -11,33 +11,34 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class GameLogic extends UniversalAdapter {
-    public static final int INITIAL_BOARD_SIZE = 8;
-    private final JFrame mainGame;
+    public static final int INITIAL_FIELD_SIZE = 8;
+    private final JFrame gameFrame;
     private final JLabel label;
-    private GameField currentBoard;
-    private int currentBoardSize;
+    private GameField field;
+    private int fieldSize;
     private int level;
 
-    public GameLogic(JFrame mainGame, JLabel label) {
-        this.mainGame = mainGame;
+    public GameLogic(JFrame gameFrame, JLabel label) {
+        this.gameFrame = gameFrame;
         this.label = label;
+        fieldSize = INITIAL_FIELD_SIZE;
         level = 1;
-        currentBoardSize = INITIAL_BOARD_SIZE;
-        initNewField(currentBoardSize);
-        mainGame.add(currentBoard);
+
+        initNewField();
+        gameFrame.add(field);
+
         updateLabel();
     }
 
-    private void updateLabel() {
-        label.setText("CURRENT LEVEL: " + level + "; CURRENT BOARD SIZE: " + currentBoardSize);
-        mainGame.revalidate();
-        mainGame.repaint();
+    private void initNewField() {
+        field = new GameField(fieldSize);
+        field.addMouseMotionListener(this);
+        field.addMouseListener(this);
     }
 
-    private void initNewField(int size) {
-        currentBoard = new GameField(size);
-        currentBoard.addMouseMotionListener(this);
-        currentBoard.addMouseListener(this);
+    private void updateLabel() {
+        label.setText("CURRENT LEVEL: " + level + "; CURRENT BOARD SIZE: " + fieldSize);
+        label.repaint();
     }
 
     public void gameRestart() {
@@ -46,23 +47,24 @@ public class GameLogic extends UniversalAdapter {
     }
 
     public void checkWin() {
-        if(currentBoard.isPathFromStartToFinish()){
+        if (field.isPathFromStartToFinish()) {
             level++;
             resetField();
         }
     }
 
-    private void resetField(){
-        mainGame.remove(currentBoard);
-        initNewField(currentBoardSize);
-        mainGame.add(currentBoard);
+    private void resetField() {
+        gameFrame.remove(field);
+        initNewField();
+        gameFrame.add(field);
         updateLabel();
-        mainGame.revalidate();
-        mainGame.repaint();
+        gameFrame.revalidate();
+        gameFrame.repaint();
 
-        mainGame.setFocusable(true);
-        mainGame.requestFocus();
+        gameFrame.setFocusable(true);
+        gameFrame.requestFocus();
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         gameRestart();
@@ -70,14 +72,16 @@ public class GameLogic extends UniversalAdapter {
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        currentBoardSize = ((JSlider) e.getSource()).getValue();
-        gameRestart();
+        if (!((JSlider) e.getSource()).getValueIsAdjusting()) {
+            fieldSize = ((JSlider) e.getSource()).getValue();
+            gameRestart();
+        }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        currentBoard.setDefaultColorForPipes();
-        Component current = currentBoard.getComponentAt(e.getX(), e.getY());
+        field.setDefaultColorForPipes();
+        Component current = field.getComponentAt(e.getX(), e.getY());
         if (!(current instanceof Cell)) {
             return;
         }
@@ -87,19 +91,19 @@ public class GameLogic extends UniversalAdapter {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        Component current = currentBoard.getComponentAt(e.getPoint());
+        Component current = field.getComponentAt(e.getPoint());
         if (!(current instanceof Cell)) {
-            currentBoard.repaint();
+            field.repaint();
             return;
         }
         ((Cell) current).setHighlight(true);
-        currentBoard.repaint();
+        field.repaint();
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         super.mouseExited(e);
-        currentBoard.repaint();
+        field.repaint();
     }
 
     @Override
@@ -109,7 +113,7 @@ public class GameLogic extends UniversalAdapter {
                 gameRestart();
                 break;
             case KeyEvent.VK_ESCAPE:
-                mainGame.dispose();
+                gameFrame.dispose();
                 break;
             case KeyEvent.VK_ENTER:
                 checkWin();
