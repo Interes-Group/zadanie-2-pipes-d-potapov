@@ -89,9 +89,16 @@ public class GameLogic extends UniversalAdapter {
     public void mouseMoved(MouseEvent e) {
         Component current = currentBoard.getComponentAt(e.getPoint());
         if (!(current instanceof Cell)) {
+            currentBoard.repaint();
             return;
         }
         ((Cell) current).setHighlight(true);
+        currentBoard.repaint();
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        super.mouseExited(e);
         currentBoard.repaint();
     }
 
