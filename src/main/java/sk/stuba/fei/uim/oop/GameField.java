@@ -40,7 +40,7 @@ public class GameField extends JPanel {
     private void generateStartAndFinish() {
         int columnStart = random.nextInt(fieldSize);
         startCell = new OutermostPipe(0, columnStart);
-        startCell.waterReached();
+        startCell.setWaterReached(true);
         path[0][columnStart] = startCell;
 
         int columnFinish = random.nextInt(fieldSize);
@@ -137,7 +137,7 @@ public class GameField extends JPanel {
         int column = coordinates[1];
 
         while (row >= 0 && column >= 0 && row < fieldSize && column < fieldSize && path[row][column].isConnectedToDirection(direction)) {
-            path[row][column].waterReached();
+            path[row][column].setWaterReached(true);
             if (path[row][column] == finishCell){
                 return true;
             }
@@ -146,6 +146,17 @@ public class GameField extends JPanel {
             row = coordinates[0];
             column = coordinates[1];
         }
+
         return false;
+    }
+
+    public void setDefaultColorForPipes(){
+        for (Cell[] rowPath : path){
+            for (Cell cell : rowPath) {
+                if (cell != startCell){
+                    cell.setWaterReached(false);
+                }
+            }
+        }
     }
 }

@@ -29,7 +29,7 @@ public class Game {
         slider.addChangeListener(gameLogic);
 
         JButton buttonRestart = new JButton("RESTART");
-        buttonRestart.addActionListener(e -> gameLogic.gameRestart());
+        buttonRestart.addActionListener(gameLogic);
         buttonRestart.setFocusable(false);
 
         JButton buttonCheckWin = new JButton("CHECK WIN");

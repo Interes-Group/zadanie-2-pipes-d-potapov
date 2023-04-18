@@ -11,15 +11,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class GameLogic extends UniversalAdapter {
-    public static final int INITIAL_BOARD_SIZE = 3;
+    public static final int INITIAL_BOARD_SIZE = 8;
     private final JFrame mainGame;
     private final JLabel label;
     private GameField currentBoard;
     private int currentBoardSize;
+    private int level;
 
     public GameLogic(JFrame mainGame, JLabel label) {
         this.mainGame = mainGame;
         this.label = label;
+        level = 1;
         currentBoardSize = INITIAL_BOARD_SIZE;
         initNewField(currentBoardSize);
         mainGame.add(currentBoard);
@@ -27,7 +29,7 @@ public class GameLogic extends UniversalAdapter {
     }
 
     private void updateLabel() {
-        label.setText("BABABABA CURRENT BOARD SIZE: " + currentBoardSize);
+        label.setText("CURRENT LEVEL: " + level + "; CURRENT BOARD SIZE: " + currentBoardSize);
         mainGame.revalidate();
         mainGame.repaint();
     }
@@ -39,6 +41,18 @@ public class GameLogic extends UniversalAdapter {
     }
 
     public void gameRestart() {
+        level = 1;
+        resetField();
+    }
+
+    public void checkWin() {
+        if(currentBoard.isPathFromStartToFinish()){
+            level++;
+            resetField();
+        }
+    }
+
+    private void resetField(){
         mainGame.remove(currentBoard);
         initNewField(currentBoardSize);
         mainGame.add(currentBoard);
@@ -49,16 +63,9 @@ public class GameLogic extends UniversalAdapter {
         mainGame.setFocusable(true);
         mainGame.requestFocus();
     }
-
-    public void checkWin() {
-        if(currentBoard.isPathFromStartToFinish()){
-            gameRestart();
-        }
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
-//        gameRestart();
+        gameRestart();
     }
 
     @Override
@@ -69,11 +76,23 @@ public class GameLogic extends UniversalAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        currentBoard.setDefaultColorForPipes();
         Component current = currentBoard.getComponentAt(e.getX(), e.getY());
         if (!(current instanceof Cell)) {
             return;
         }
+        ((Cell) current).setHighlight(true);
         ((Cell) current).rotate();
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        Component current = currentBoard.getComponentAt(e.getPoint());
+        if (!(current instanceof Cell)) {
+            return;
+        }
+        ((Cell) current).setHighlight(true);
+        currentBoard.repaint();
     }
 
     @Override
@@ -88,15 +107,5 @@ public class GameLogic extends UniversalAdapter {
             case KeyEvent.VK_ENTER:
                 checkWin();
         }
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        Component current = currentBoard.getComponentAt(e.getPoint());
-        if (!(current instanceof Cell)) {
-            return;
-        }
-        ((Cell) current).setHighlight(true);
-        current.repaint();
     }
 }
