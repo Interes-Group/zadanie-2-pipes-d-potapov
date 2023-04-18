@@ -9,8 +9,8 @@ import java.util.Random;
 public class ArchedPipe extends Cell {
     private final List<Direction> directions;
 
-    public ArchedPipe(int x, int y) {
-        super(x, y);
+    public ArchedPipe(int row, int column) {
+        super(row, column);
         Random random = new Random();
         directions = new ArrayList<>();
         Direction direction = Direction.values()[random.nextInt(Direction.values().length)];

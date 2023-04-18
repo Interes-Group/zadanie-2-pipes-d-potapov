@@ -25,4 +25,18 @@ public enum Direction {
                 g.fillRect(0, (cellHeight - width) / 2, (cellWidth + width) / 2, width);
         }
     }
+
+    public int[] getNextCoordinates(int row, int column){
+        switch (this) {
+            case NORTH:
+                return new int[] {row - 1, column};
+            case EAST:
+                return new int[] {row, column + 1};
+            case SOUTH:
+                return new int[] {row + 1, column};
+            case WEST:
+                return new int[] {row, column - 1};
+        }
+        return new int[0];
+    }
 }

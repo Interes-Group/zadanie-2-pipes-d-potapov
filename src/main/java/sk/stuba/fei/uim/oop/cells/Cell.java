@@ -10,24 +10,30 @@ public class Cell extends JPanel {
     private final int[] coordinates;
     private List<Direction> directions;
     private boolean isWaterReached = false;
-    public Cell(int x, int y) {
+    private boolean highlight;
+
+    public Cell(int row, int column) {
         setBorder(BorderFactory.createLineBorder(Color.WHITE));
         setBackground(Color.WHITE);
-        coordinates = new int[]{x, y};
+        coordinates = new int[]{row, column};
     }
 
     public int[] getCoordinates() {
         return coordinates;
     }
 
+    public List<Direction> getDirections() {
+        return directions;
+    }
+
     protected void setDirections(List<Direction> directions) {
         this.directions = directions;
     }
 
-    public List<Direction> getDirections() {
-        return directions;
+    public void setHighlight(boolean bool){
+        highlight = bool;
     }
-    public void waterReached(){
+    public void waterReached() {
         isWaterReached = true;
         repaint();
     }
@@ -35,7 +41,15 @@ public class Cell extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (isWaterReached){
+        if (highlight){
+            g.setColor(Color.PINK);
+            ((Graphics2D) g).setStroke(new BasicStroke(5));
+            g.drawRect(0,0 , getWidth(), getHeight());
+            highlight = false;
+        } else {
+
+        }
+        if (isWaterReached) {
             g.setColor(Color.BLUE);
         }
         if (directions != null) {
@@ -47,5 +61,22 @@ public class Cell extends JPanel {
 
     public void rotate() {
         repaint();
+    }
+
+    public boolean isConnectedToDirection(Direction direction) {
+        if (directions != null) {
+            Direction connectDirection = direction.next().next();
+            for (Direction tubeDirection : directions) {
+                if (connectDirection.equals(tubeDirection)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public Direction getExitDirection(Direction direction) {
+        int enterDirectionIndex = directions.lastIndexOf(direction);
+        return directions.get((enterDirectionIndex + 1) % directions.size());
     }
 }

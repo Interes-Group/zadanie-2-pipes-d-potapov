@@ -10,8 +10,8 @@ import java.util.Random;
 public class StraightPipe extends Cell {
     private final List<Direction> directions;
 
-    public StraightPipe(int x, int y) {
-        super(x, y);
+    public StraightPipe(int row, int column) {
+        super(row, column);
         Random random = new Random();
         directions = new ArrayList<>();
         Direction direction = Direction.values()[random.nextInt(Direction.values().length)];

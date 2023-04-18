@@ -10,8 +10,8 @@ import java.util.Random;
 public class OutermostPipe extends Cell {
     private final List<Direction> directions;
 
-    public OutermostPipe(int x, int y) {
-        super(x, y);
+    public OutermostPipe(int row, int column) {
+        super(row, column);
         Random random = new Random();
         directions = new ArrayList<>();
         Direction direction = Direction.values()[random.nextInt(Direction.values().length)];

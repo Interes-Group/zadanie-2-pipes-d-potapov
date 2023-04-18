@@ -46,12 +46,14 @@ public class GameLogic extends UniversalAdapter {
         mainGame.revalidate();
         mainGame.repaint();
 
-//        mainGame.setFocusable(true);
-//        mainGame.requestFocus();
+        mainGame.setFocusable(true);
+        mainGame.requestFocus();
     }
 
     public void checkWin() {
-        currentBoard.checkPathFromStart();
+        if(currentBoard.isPathFromStartToFinish()){
+            gameRestart();
+        }
     }
 
     @Override
@@ -82,6 +84,19 @@ public class GameLogic extends UniversalAdapter {
                 break;
             case KeyEvent.VK_ESCAPE:
                 mainGame.dispose();
+                break;
+            case KeyEvent.VK_ENTER:
+                checkWin();
         }
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        Component current = currentBoard.getComponentAt(e.getPoint());
+        if (!(current instanceof Cell)) {
+            return;
+        }
+        ((Cell) current).setHighlight(true);
+        current.repaint();
     }
 }

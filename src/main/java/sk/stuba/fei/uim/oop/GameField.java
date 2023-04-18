@@ -2,8 +2,8 @@ package sk.stuba.fei.uim.oop;
 
 import sk.stuba.fei.uim.oop.cells.ArchedPipe;
 import sk.stuba.fei.uim.oop.cells.Cell;
-import sk.stuba.fei.uim.oop.cells.StraightPipe;
 import sk.stuba.fei.uim.oop.cells.OutermostPipe;
+import sk.stuba.fei.uim.oop.cells.StraightPipe;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,29 +38,29 @@ public class GameField extends JPanel {
     }
 
     private void generateStartAndFinish() {
-        int yStart = random.nextInt(fieldSize);
-        startCell = new OutermostPipe(0, yStart);
+        int columnStart = random.nextInt(fieldSize);
+        startCell = new OutermostPipe(0, columnStart);
         startCell.waterReached();
-        path[0][yStart] = startCell;
+        path[0][columnStart] = startCell;
 
-        int yFinish = random.nextInt(fieldSize);
-        finishCell = new OutermostPipe(fieldSize - 1, yFinish);
-        path[fieldSize - 1][yFinish] = finishCell;
+        int columnFinish = random.nextInt(fieldSize);
+        finishCell = new OutermostPipe(fieldSize - 1, columnFinish);
+        path[fieldSize - 1][columnFinish] = finishCell;
     }
 
     private void randomizedDFS(int[] coordinatesPrevious, int[] coordinatesCurrent) {
-        int xCurrent = coordinatesCurrent[0];
-        int yCurrent = coordinatesCurrent[1];
+        int rowCurrent = coordinatesCurrent[0];
+        int columnCurrent = coordinatesCurrent[1];
 
         if (coordinatesPrevious != null) {
-            path[xCurrent][yCurrent] = new Cell(xCurrent, yCurrent);
+            path[rowCurrent][columnCurrent] = new Cell(rowCurrent, columnCurrent);
         }
 
         List<int[]> neighbors = new ArrayList<>();
-        neighbors.add(new int[]{xCurrent, yCurrent + 1});
-        neighbors.add(new int[]{xCurrent, yCurrent - 1});
-        neighbors.add(new int[]{xCurrent + 1, yCurrent});
-        neighbors.add(new int[]{xCurrent - 1, yCurrent});
+        neighbors.add(new int[]{rowCurrent, columnCurrent + 1});
+        neighbors.add(new int[]{rowCurrent, columnCurrent - 1});
+        neighbors.add(new int[]{rowCurrent + 1, columnCurrent});
+        neighbors.add(new int[]{rowCurrent - 1, columnCurrent});
         Collections.shuffle(neighbors);
 
         if (contains(finishCell.getCoordinates(), neighbors)) {
@@ -72,9 +72,9 @@ public class GameField extends JPanel {
         }
 
         for (int[] neighbor : neighbors) {
-            int xNeighbor = neighbor[0];
-            int yNeighbor = neighbor[1];
-            if (xNeighbor >= 0 && yNeighbor >= 0 && xNeighbor < fieldSize && yNeighbor < fieldSize && path[xNeighbor][yNeighbor] == null) {
+            int rowNeighbor = neighbor[0];
+            int columnNeighbor = neighbor[1];
+            if (rowNeighbor >= 0 && columnNeighbor >= 0 && rowNeighbor < fieldSize && columnNeighbor < fieldSize && path[rowNeighbor][columnNeighbor] == null) {
                 randomizedDFS(coordinatesCurrent, neighbor);
                 if (finishWasFound) {
                     if (coordinatesPrevious != null) {
@@ -96,12 +96,12 @@ public class GameField extends JPanel {
     }
 
     private void chooseAndInsertPipeToPath(int[] coordinatesPrevious, int[] coordinatesCurrent, int[] coordinatesNext) {
-        int xPrevious = coordinatesPrevious[0];
-        int yPrevious = coordinatesPrevious[1];
-        int xNext = coordinatesNext[0];
-        int yNext = coordinatesNext[1];
+        int rowPrevious = coordinatesPrevious[0];
+        int columnPrevious = coordinatesPrevious[1];
+        int rowNext = coordinatesNext[0];
+        int columnNext = coordinatesNext[1];
 
-        if (xPrevious != xNext && yPrevious != yNext) {
+        if (rowPrevious != rowNext && columnPrevious != columnNext) {
             insertPipeToPath(new ArchedPipe(coordinatesCurrent[0], coordinatesCurrent[1]));
         } else {
             insertPipeToPath(new StraightPipe(coordinatesCurrent[0], coordinatesCurrent[1]));
@@ -111,24 +111,41 @@ public class GameField extends JPanel {
 
     private void insertPipeToPath(Cell pipe) {
         int[] coordinates = pipe.getCoordinates();
-        int x = coordinates[0];
-        int y = coordinates[1];
-        path[x][y] = pipe;
+        int row = coordinates[0];
+        int column = coordinates[1];
+        path[row][column] = pipe;
     }
 
-    private void addCellsToGameField(){
+    private void addCellsToGameField() {
         for (int i = 0; i < fieldSize; i++) {
             for (int j = 0; j < fieldSize; j++) {
                 if (path[i][j] != null) {
                     add(path[i][j]);
                 } else {
-                    add(new Cell(i, j));
+                    Cell cell = new Cell(i, j);
+                    path[i][j] = cell;
+                    add(cell);
                 }
             }
         }
     }
 
-    public void checkPathFromStart(){
+    public boolean isPathFromStartToFinish() {
+        Direction direction = startCell.getDirections().get(0);
+        int[] coordinates = direction.getNextCoordinates(startCell.getCoordinates()[0], startCell.getCoordinates()[1]);
+        int row = coordinates[0];
+        int column = coordinates[1];
 
+        while (row >= 0 && column >= 0 && row < fieldSize && column < fieldSize && path[row][column].isConnectedToDirection(direction)) {
+            path[row][column].waterReached();
+            if (path[row][column] == finishCell){
+                return true;
+            }
+            direction = path[row][column].getExitDirection(direction.next().next());
+            coordinates = direction.getNextCoordinates(row, column);
+            row = coordinates[0];
+            column = coordinates[1];
+        }
+        return false;
     }
 }
