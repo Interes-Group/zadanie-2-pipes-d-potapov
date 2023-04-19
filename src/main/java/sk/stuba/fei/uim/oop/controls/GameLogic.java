@@ -1,6 +1,6 @@
 package sk.stuba.fei.uim.oop.controls;
 
-import sk.stuba.fei.uim.oop.GameField;
+import sk.stuba.fei.uim.oop.field.GameField;
 import sk.stuba.fei.uim.oop.cells.Cell;
 
 import javax.swing.*;

@@ -1,7 +1,5 @@
 package sk.stuba.fei.uim.oop.cells;
 
-import sk.stuba.fei.uim.oop.Direction;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

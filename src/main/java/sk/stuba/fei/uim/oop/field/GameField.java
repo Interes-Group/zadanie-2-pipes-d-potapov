@@ -1,9 +1,6 @@
-package sk.stuba.fei.uim.oop;
+package sk.stuba.fei.uim.oop.field;
 
-import sk.stuba.fei.uim.oop.cells.ArchedPipe;
-import sk.stuba.fei.uim.oop.cells.Cell;
-import sk.stuba.fei.uim.oop.cells.OutermostPipe;
-import sk.stuba.fei.uim.oop.cells.StraightPipe;
+import sk.stuba.fei.uim.oop.cells.*;
 
 import javax.swing.*;
 import java.awt.*;
