@@ -114,6 +114,7 @@ public class GameLogic extends UniversalAdapter {
                 break;
             case KeyEvent.VK_ESCAPE:
                 gameFrame.dispose();
+                System.exit(0);
                 break;
             case KeyEvent.VK_ENTER:
                 checkWin();
